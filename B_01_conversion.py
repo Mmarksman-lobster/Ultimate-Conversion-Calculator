@@ -1,4 +1,3 @@
-from C_02_Conversion_numberchecker import num_check
 
 
 def statement_generator(statement, decoration):
@@ -8,15 +7,17 @@ def statement_generator(statement, decoration):
 def instructions():
     statement_generator("instructions", "-")
     print("""
-here are you instructions my 
--select the number for your initial measurement
--select which type of measurement it is 
--select which measurement you want to convert it to
+here are your instructions 
+-select the type of conversion your doing(e.g. distance)
+-select the base measurement (e.g. meters)
+-select which measurement you want to convert it to (e.g. km)
 -type "xxx" to end session
+- please only use the names it recommends you. example. if it tells you to type "days" dont put "d" it wont work
     """)
 
 #ask user for width and loop
 # until they enter a number more than 0
+
 def num_check(question):
 
     error = "please enter a number that is more than 0\n"
@@ -34,23 +35,76 @@ def num_check(question):
         except ValueError:
             print (error)
 
-distance_dict = {
-    "mm": 1000,
-    "cm": 100,
-    "m": 1,
-    "km": 0.001
-}
-
-time_dict = {
-    "second": 1/3600,
-    "minute": 1/60,
-    "hour": 1,
-    "day": 1/24
-}
 
 
+def convert_distance():
 
+    print("\n--- Distance Converter ---")
+    print("Available units: mm, cm, m, km")
 
+    # Define conversion rates to base measurement (Meter)
+    to_meters = {'mm': 0.001, 'cm': 0.01, 'm': 1.0, 'km': 1000.0}
+
+    from_choice = input("Enter starting unit: ").strip().lower()
+    to_choice = input("Enter target unit: ").strip().lower()
+
+    if from_choice not in to_meters or to_choice not in to_meters:
+        print(" Invalid unit entered. Returning to main menu.")
+        return
+
+    val = num_check(f"Enter the amount of {from_choice} to convert: ",)
+
+    # Convert from starting unit to meters, then meters to target unit
+    value_in_meters = val * to_meters[from_choice]
+    converted_value = value_in_meters / to_meters[to_choice]
+
+    print(f" {val} {from_choice} = {converted_value} {to_choice}")
+
+def convert_mass():
+
+    print("\n--- Mass Converter ---")
+    print("Available units: g, kg, tonne")
+
+    # Define conversion rates to the base unit (Grams)
+    to_grams = {'g': 1.0, 'kg': 1000.0, 'tonne': 1000000.0}
+
+    from_choice = input("Enter starting unit: ").strip().lower()
+    to_choice = input("Enter target unit: ").strip().lower()
+
+    if from_choice not in to_grams or to_choice not in to_grams:
+        print(" Invalid unit entered. Returning to main menu.")
+        return
+
+    val = num_check(f"Enter the amount of {from_choice} to convert: ",)
+
+    # Convert from starting unit to grams, then grams to target unit
+    value_in_grams = val * to_grams[from_choice]
+    converted_value = value_in_grams / to_grams[to_choice]
+
+    print(f" {val} {from_choice} = {converted_value} {to_choice}")
+
+def convert_time():
+
+        print("\n--- Time Converter ---")
+        print("Available units: s, min, hour, day ---")
+
+        # Define conversion rates to the base unit (Seconds)
+        to_seconds = {'s': 1.0, 'min': 60.0, 'hour': 3600.0, 'day': 86400.0}
+
+        from_choice = input("Enter starting unit: ").strip().lower()
+        to_choice = input("Enter target unit: ").strip().lower()
+
+        if from_choice not in to_seconds or to_choice not in to_seconds:
+            print(" Invalid unit entered. Returning to main menu.")
+            return
+
+        val = num_check(f"Enter the amount of {from_choice} to convert: ")
+
+        # Convert from starting unit to seconds, then seconds to target unit
+        value_in_seconds = val * to_seconds[from_choice]
+        converted_value = value_in_seconds / to_seconds[to_choice]
+
+        print(f" {val} {from_choice} = {converted_value} {to_choice}")
 # main routine goes here
 statement_generator ( "the ultimate conversion calculator","=")
 
@@ -63,17 +117,26 @@ if want_instructions == "":
 
 print()
 #loop
-while True:
+def menu():
+    while True:
+        print()
+        print("Type: 'distance', 'time', or 'mass'")
+        print("Type: 'xxx' to quit")
+        print()
+        menu_choice = input("Select a category: ").strip().lower()
 
+        if menu_choice == 'distance':
+            convert_distance()
+        elif menu_choice == 'time':
+            convert_time()
+        elif menu_choice == 'mass':
+            convert_mass()
+        elif menu_choice in ['xxx']:
+            print("\nThank you for using my ultimate conversion calculator"
+                  "\n Goodbye")
+            break
+        else:
+            print(" Invalid selection. Please type distance, time, mass, or xxx.")
 
-    #gain number and measurement info
-    print()
-    print()
-    dict_check = input("which conversion are you doing, distance, time, mass, volume")
-    original_measurement = num_check("what is your number?")
-    original_unit = input("your unit for the number is?")
-    new_unit = input("what unit do you want it do be converted to?")
-    print(f"your measurement is {original_measurement}{original_unit} and it goes to {new_unit}")
-
-
-
+if __name__ == "__main__":
+    menu()
